@@ -34,6 +34,7 @@ if __name__ == '__main__':
                 d.left_side = data[2]
                 d.left_forward = data[3]
                 d.sum_all = sum(data)
+                d.largest = max(data)
                 d.sum_forward = data[0] + data[3]
                 pub.publish(d)
         except:
