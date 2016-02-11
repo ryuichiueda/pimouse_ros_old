@@ -3,4 +3,3 @@ dist: trusty
 
 script:
   - bash -xve ./test/travis_ros_install.bash
-  - bash -xve ./test/travis_package_make.bash
