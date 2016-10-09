@@ -22,7 +22,7 @@ rostopic pub -1 '/buzzer' std_msgs/UInt16 1000
 grep '[ERROR].*/dev/rtbuzzer0' ./out
 
 #3.2 when the file exists
-touch /dev/rtbuzzer0
-chmod 666 /dev/rtbuzzer0
+sudo touch /dev/rtbuzzer0
+sudo chmod 666 /dev/rtbuzzer0
 rostopic pub -1 '/buzzer' std_msgs/UInt16 1234
 grep '^1234$' /dev/rtbuzzer0
