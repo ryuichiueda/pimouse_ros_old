@@ -19,7 +19,7 @@ grep '^/buzzer$'
 
 #3.1 when the file doesn't exist
 rostopic pub -1 '/buzzer' std_msgs/UInt16 1000
-grep -F '[ERROR].*/dev/rtbuzzer0' ./out
+grep '[ERROR].*/dev/rtbuzzer0' ./out
 
 #3.2 when the file exists
 touch /dev/rtbuzzer0
