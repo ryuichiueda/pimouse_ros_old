@@ -7,7 +7,7 @@ def recv_buzzer(data):
 	rospy.loginfo(data.data)
 	try:
 		with open("/dev/rtbuzzer0","w") as f:
-			f.print(str(data.data),file=f)
+			print(str(data.data),file=f)
 	except:
 		rospy.logerr("can't write to /dev/rtbuzzer0")
 	

@@ -25,4 +25,6 @@ grep '[ERROR].*/dev/rtbuzzer0' ./out
 sudo touch /dev/rtbuzzer0
 sudo chmod 666 /dev/rtbuzzer0
 rostopic pub -1 '/buzzer' std_msgs/UInt16 1234
+sleep 5
+cat /dev/rtbuzzer0
 grep '^1234$' /dev/rtbuzzer0
