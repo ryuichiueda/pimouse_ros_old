@@ -2,12 +2,10 @@
 import sys, rospy
 from pimouse_ros.msg import LightSensorValues
 
-freq = rospy.get_param('lightsensors_freq',10)
-    
 devfile = '/dev/rtlightsensor0'
 rospy.init_node('lightsensors')
 pub = rospy.Publisher('lightsensors', LightSensorValues, queue_size=1)
-rate = rospy.Rate(freq)
+rate = rospy.Rate(10)
 
 while not rospy.is_shutdown():
     try:
