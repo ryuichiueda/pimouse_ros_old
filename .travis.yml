@@ -5,4 +5,4 @@ script:
   - bash -xve ./test/travis_ros_install.bash
   - source ~/catkin_ws/devel/setup.bash
   - bash -xve ./test/travis_package_make.bash
-  - rostest pimouse_ros travis.test
+  - rostest pimouse_ros pimouse.launch
