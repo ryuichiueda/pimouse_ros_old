@@ -5,6 +5,7 @@ import time
 from std_msgs.msg import UInt16
 
 class BuzzerTest(unittest.TestCase):
+    BZFILE = "/dev/rtbuzzer0"
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
         self.assertIn('/buzzer',nodes, "node does not exist")
@@ -14,9 +15,10 @@ class BuzzerTest(unittest.TestCase):
         for i in range(10):
             pub.publish(1234)
             time.sleep(0.1)
-        with open("/dev/rtbuzzer0","r") as f:
+
+        with open(self.BZFILE,"r") as f:
             data = f.readline().rstrip()
-            self.assertEqual(data,"1234","value does not written to /dev/rtbuzzer0")
+            self.assertEqual(data,"1234","value does not written to " + self.BZFILE)
 
 if __name__ == '__main__':
     time.sleep(5)
