@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-import sys
 import unittest, rostest
 import rosnode
 import time
@@ -13,4 +11,4 @@ class BuzzerTest(unittest.TestCase):
 
 if __name__ == '__main__':
     time.sleep(5)
-    rostest.rosrun('raspimouse_ros','test_buzzer',BuzzerTest)
+    rostest.rosrun('raspimouse_ros','travis_test_buzzer',BuzzerTest)
