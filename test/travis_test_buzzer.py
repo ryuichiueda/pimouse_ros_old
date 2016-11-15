@@ -3,7 +3,6 @@ import unittest, rostest
 import rosnode
 import time
 
-## A sample python unit test
 class BuzzerTest(unittest.TestCase):
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
