@@ -17,8 +17,8 @@ class BuzzerTest(unittest.TestCase):
             time.sleep(0.1)
 
         with open(self.BZFILE,"r") as f:
-            data = f.readline().rstrip()
-            self.assertEqual(data,"1234","value does not written to " + self.BZFILE)
+            data = f.readline()
+            self.assertEqual(data,"1234\n","value does not written to " + self.BZFILE)
 
 if __name__ == '__main__':
     time.sleep(5)
