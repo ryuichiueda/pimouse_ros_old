@@ -9,10 +9,6 @@ class LightsensorTest(unittest.TestCase):
         self.count = 0
         rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
 
-    def test_node_exist(self):
-        nodes = rosnode.get_node_names()
-        self.assertIn('/lightsensors',nodes, "node does not exist")
-
     def callback(self,data):
         self.count += 1
         self.lf = data.left_forward
@@ -25,6 +21,10 @@ class LightsensorTest(unittest.TestCase):
         self.assertEqual(self.ls,ls,"different value: left_side")
         self.assertEqual(self.rs,rs,"different value: right_side")
         self.assertEqual(self.rf,rf,"different value: right_forward")
+
+    def test_node_exist(self):
+        nodes = rosnode.get_node_names()
+        self.assertIn('/lightsensors',nodes, "node does not exist")
 
     def test_get_value(self):
         rospy.set_param('lightsensors_freq',10)
