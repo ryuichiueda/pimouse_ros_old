@@ -5,9 +5,8 @@ import time
 from pimouse_ros.msg import LightSensorValues
 
 class LightsensorTest(unittest.TestCase):
-    count = 0
     def setUp(self):
-        rospy.set_param('lightsensors_freq',10)
+        self.count = 0
         rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
 
     def test_node_exist(self):
@@ -15,7 +14,7 @@ class LightsensorTest(unittest.TestCase):
         self.assertIn('/lightsensors',nodes, "node does not exist")
 
     def callback(self,data):
-        LightsensorTest.count += 1
+        self.count += 1
         self.lf = data.left_forward
         self.ls = data.left_side
         self.rs = data.right_side
@@ -28,6 +27,8 @@ class LightsensorTest(unittest.TestCase):
         self.assertEqual(self.rf,rf,"different value: right_forward")
 
     def test_get_value(self):
+        rospy.set_param('lightsensors_freq',10)
+        time.sleep(2)
         with open("/dev/rtlightsensor0","w") as f:
             f.write("-1 0 123 4321\n")
 
@@ -37,15 +38,11 @@ class LightsensorTest(unittest.TestCase):
     def test_change_parameter(self):
         rospy.set_param('lightsensors_freq',1)
         time.sleep(2)
-        c_prev = LightsensorTest.count
+        c_prev = self.count
         time.sleep(3)
-        self.assertTrue(LightsensorTest.count < c_prev + 4,"freq does not change")
-        self.assertFalse(LightsensorTest.count == c_prev,"subscriber is stopped")
-        rospy.set_param('lightsensors_freq',10)
-        time.sleep(2)
+        self.assertTrue(self.count < c_prev + 4,"freq does not change")
+        self.assertFalse(self.count == c_prev,"subscriber is stopped")
         
 if __name__ == '__main__':
-    time.sleep(5)
-    rospy.set_param('lightsensors_freq',10)
     rospy.init_node('travis_test_lightsensors')
     rostest.rosrun('pimouse_ros','travis_test_lightsensors',LightsensorTest)
