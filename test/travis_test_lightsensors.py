@@ -5,11 +5,10 @@ import time
 from pimouse_ros.msg import LightSensorValues
 
 class LightsensorTest(unittest.TestCase):
-    lf,ls,rs,rf = 0,0,0,0
     count = 0
-
-    def __init__(self):
-        pub = rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
+    def setUp(self):
+        rospy.set_param('lightsensors_freq',10)
+        rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
 
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
@@ -17,16 +16,16 @@ class LightsensorTest(unittest.TestCase):
 
     def callback(self,data):
         LightsensorTest.count += 1
-        LightsensorTest.lf = data.left_forward
-        LightsensorTest.ls = data.left_side
-        LightsensorTest.rs = data.right_side
-        LightsensorTest.rf = data.right_forward
+        self.lf = data.left_forward
+        self.ls = data.left_side
+        self.rs = data.right_side
+        self.rf = data.right_forward
 
     def check_values(self,lf,ls,rs,rf):
-        self.assertEqual(LightsensorTest.lf,lf,"different value: left_forward")
-        self.assertEqual(LightsensorTest.ls,ls,"different value: left_side")
-        self.assertEqual(LightsensorTest.rs,rs,"different value: right_side")
-        self.assertEqual(LightsensorTest.rf,rf,"different value: right_forward")
+        self.assertEqual(self.lf,lf,"different value: left_forward")
+        self.assertEqual(self.ls,ls,"different value: left_side")
+        self.assertEqual(self.rs,rs,"different value: right_side")
+        self.assertEqual(self.rf,rf,"different value: right_forward")
 
     def test_get_value(self):
         with open("/dev/rtlightsensor0","w") as f:
@@ -35,12 +34,13 @@ class LightsensorTest(unittest.TestCase):
         time.sleep(3)
         self.check_values(4321,123,0,-1)
 
-    def test_change_freq(self):
+    def test_change_parameter(self):
         rospy.set_param('lightsensors_freq',1)
         time.sleep(2)
         c_prev = LightsensorTest.count
         time.sleep(3)
         self.assertTrue(LightsensorTest.count < c_prev + 4,"freq does not change")
+        self.assertFalse(LightsensorTest.count == c_prev,"subscriber is stopped")
         rospy.set_param('lightsensors_freq',10)
         time.sleep(2)
         
