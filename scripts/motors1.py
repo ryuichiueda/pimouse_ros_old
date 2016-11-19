@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 import sys, rospy
-from std_srvs.srv import Trigger, TriggerResponse
+from pimouse_ros.msg import Motion
 
 class Motor():
     def __init__(self):
-        if not self.set_power(False): sys.exit(1)
+        if not self.set_power(True): sys.exit(1)
 
         rospy.on_shutdown(self.set_power)
-        self.srv_on = rospy.Service('motor_on', Trigger, self.callback_on)
-        self.srv_off = rospy.Service('motor_off', Trigger, self.callback_off)
+        self.sub_raw = rospy.Subscriber('motion', Motion, self.callback_raw)
 
     def set_power(self,onoff=False):
         en = "/dev/rtmotoren0"
@@ -22,14 +21,21 @@ class Motor():
 
         return False
 
-    def callback_sub(self,onoff):
-        d = TriggerResponse()
-        d.success = self.set_power(onoff)
-        d.message = "ON" if self.is_on else "OFF"
-        return d
+    def callback_raw(self,message):
+        if not self.is_on:
+            rospy.logerr("not enpowered")
+            return
 
-    def callback_on(self,message): return self.callback_sub(True)
-    def callback_off(self,message): return self.callback_sub(False)
+        try:
+            lf = open("/dev/rtmotor_raw_l0",'w')
+            rf = open("/dev/rtmotor_raw_r0",'w')
+            lf.write(str(message.left_hz) + "\n")
+            rf.write(str(message.right_hz) + "\n")
+        except:
+            rospy.logerr("cannot write to rtmotor_raw_*")
+    
+        lf.close()
+        rf.close()
 
 if __name__ == '__main__':
     rospy.init_node('motors')
