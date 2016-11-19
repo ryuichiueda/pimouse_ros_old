@@ -50,6 +50,6 @@ class Motor():
         return True
 
 if __name__ == '__main__':
-    rospy.init_node('motor')
+    rospy.init_node('motors')
     m = Motor()
     rospy.spin()

@@ -32,6 +32,6 @@ class Motor():
     def callback_off(self,message): return self.callback_sub(False)
 
 if __name__ == '__main__':
-    rospy.init_node('motor')
+    rospy.init_node('motors')
     m = Motor()
     rospy.spin()
