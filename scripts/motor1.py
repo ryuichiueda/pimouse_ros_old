@@ -1,33 +1,35 @@
 #!/usr/bin/env python
 import sys, rospy
-from std_srvs.srv import SetBool, SetBoolResponse
+from std_srvs.srv import Trigger, TriggerResponse
 
 class Motor():
-    is_on = None
-
     def __init__(self):
-        rospy.on_shutdown(lambda : self.set_power(False))
-        self.srv_en = rospy.Service('switch_motors', SetBool, self.callback_en)
+        if not self.set_power(False): sys.exit(1)
 
-    def set_power(self,onoff):
+        rospy.on_shutdown(self.set_power)
+        self.srv_on = rospy.Service('motor_on', Trigger, self.callback_on)
+        self.srv_off = rospy.Service('motor_off', Trigger, self.callback_off)
+
+    def set_power(self,onoff=False):
         en = "/dev/rtmotoren0"
         try:
             with open(en,'w') as f:
-                if onoff: f.write("1\n")
-                else:     f.write("0\n")
-                Motor.is_on = onoff
+                f.write("1\n" if onoff else "0\n")
+            self.is_on = onoff
             return True
         except:
             rospy.logerr("cannot write to " + en)
 
         return False
 
-    def callback_en(self,message):
-        d = SetBoolResponse()
-        d.success = self.set_power(message.data)
-        if Motor.is_on: d.message = "MOTOR POWER: ON"
-        else:           d.message = "MOTOR POWER: OFF"
+    def callback_sub(self,onoff):
+        d = TriggerResponse()
+        d.success = self.set_power(onoff)
+        d.message = "ON" if self.is_on else "OFF"
         return d
+
+    def callback_on(self,message): return self.callback_sub(True)
+    def callback_off(self,message): return self.callback_sub(False)
 
 if __name__ == '__main__':
     rospy.init_node('motor')
