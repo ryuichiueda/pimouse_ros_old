@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import sys, rospy
+import sys, rospy, math
 from pimouse_ros.msg import Motion
+from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 
 class Motor():
@@ -8,7 +9,8 @@ class Motor():
         if not self.set_power(False): sys.exit(1)
 
         rospy.on_shutdown(self.set_power)
-        self.sub_raw = rospy.Subscriber('motion', Motion, self.callback_raw)
+        self.sub_raw = rospy.Subscriber('motor_raw', Motion, self.callback_raw_freq)
+        self.sub_cmd_vel = rospy.Subscriber('cmd_vel', Twist, self.callback_cmd_vel)
         self.srv_on = rospy.Service('motor_on', Trigger, self.callback_on)
         self.srv_off = rospy.Service('motor_off', Trigger, self.callback_off)
 
@@ -24,21 +26,26 @@ class Motor():
 
         return False
 
-    def callback_raw(self,message):
+    def set_raw_freq(self,left_hz,right_hz):
         if not self.is_on:
             rospy.logerr("not enpowered")
             return
 
         try:
-            lf = open("/dev/rtmotor_raw_l0",'w')
-            rf = open("/dev/rtmotor_raw_r0",'w')
-            lf.write(str(message.left_hz) + "\n")
-            rf.write(str(message.right_hz) + "\n")
+            with open("/dev/rtmotor_raw_l0",'w') as lf,\
+                 open("/dev/rtmotor_raw_r0",'w') as rf:
+                lf.write(str(int(round(left_hz))) + "\n")
+                rf.write(str(int(round(right_hz))) + "\n")
         except:
             rospy.logerr("cannot write to rtmotor_raw_*")
 
-        lf.close()
-        rf.close()
+    def callback_raw_freq(self,message):
+        self.set_raw_freq(message.left_hz,message.right_hz)
+
+    def callback_cmd_vel(self,message):
+        forward_hz = 80000.0*message.linear.x/(9*math.pi)
+        rot_hz = 400.0*message.angular.z/math.pi
+        self.set_raw_freq(forward_hz-rot_hz, forward_hz+rot_hz)
 
     def callback_sub(self,onoff):
         d = TriggerResponse()
