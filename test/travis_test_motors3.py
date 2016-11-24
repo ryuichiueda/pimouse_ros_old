@@ -2,7 +2,7 @@
 import unittest, rostest
 import rosnode, rospy
 import time
-from pimouse_ros.msg import Motion
+from pimouse_ros.msg import MotorFreqs
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 from pimouse_ros.srv import TimedMotion
@@ -37,8 +37,8 @@ class MotorTest(unittest.TestCase):
             self.assertEqual(data,"1\n","wrong value in rtmotor0 at motor on")
 
     def test_put_freq(self):
-        pub = rospy.Publisher('/motor_raw', Motion)
-        m = Motion()
+        pub = rospy.Publisher('/motor_raw', MotorFreqs)
+        m = MotorFreqs()
         m.left_hz = 123
         m.right_hz = 456
         for i in range(10):

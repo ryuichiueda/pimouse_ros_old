@@ -47,7 +47,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   LightSensorValues.msg
-  Motion.msg
+  MotorFreqs.msg
 )
 
 ## Generate services in the 'srv' folder
