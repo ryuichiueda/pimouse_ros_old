@@ -13,7 +13,7 @@ class MotorTest(unittest.TestCase):
         on = rospy.ServiceProxy('/motor_on', Trigger)
         ret = on()
 
-    def file_check(dev,value,message):
+    def file_check(self,dev,value,message):
         with open("/dev/" + dev,"r") as f:
             self.assertEqual(f.readline(),str(value)+"\n",message)
 
