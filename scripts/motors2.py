@@ -47,14 +47,14 @@ class Motor():
         rot_hz = 400.0*message.angular.z/math.pi
         self.set_raw_freq(forward_hz-rot_hz, forward_hz+rot_hz)
 
-    def callback_sub(self,onoff):
+    def onoff_response(self,onoff):
         d = TriggerResponse()
         d.success = self.set_power(onoff)
         d.message = "ON" if self.is_on else "OFF"
         return d
 
-    def callback_on(self,message): return self.callback_sub(True)
-    def callback_off(self,message): return self.callback_sub(False)
+    def callback_on(self,message): return self.onoff_response(True)
+    def callback_off(self,message): return self.onoff_response(False)
 
 if __name__ == '__main__':
     rospy.init_node('motors')
