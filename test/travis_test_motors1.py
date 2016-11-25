@@ -7,6 +7,10 @@ from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 
 class MotorTest(unittest.TestCase):
+    def file_check(dev,value,message):
+        with open("/dev/" + dev,"r") as f:
+            self.assertEqual(f.readline(),str(value)+"\n",message)
+
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
         self.assertIn('/motors', nodes, "node does not exist")
@@ -20,12 +24,8 @@ class MotorTest(unittest.TestCase):
             pub.publish(m)
             time.sleep(0.1)
 
-        with open("/dev/rtmotor_raw_l0","r") as f:
-            data = f.readline()
-            self.assertEqual(data,"123\n","value does not written to rtmotor_raw_l0")
-        with open("/dev/rtmotor_raw_r0","r") as f:
-            data = f.readline()
-            self.assertEqual(data,"456\n","value does not written to rtmotor_raw_r0")
+        file_check("rtmotor_raw_l0",m.left_hz,"wring left value from motor_raw")
+        file_check("rtmotor_raw_r0",m.right_hz,"wring left value from motor_raw")
 
     def test_put_cmd_vel(self):
         pub = rospy.Publisher('/cmd_vel', Twist)
@@ -36,12 +36,8 @@ class MotorTest(unittest.TestCase):
             pub.publish(m)
             time.sleep(0.1)
 
-        with open("/dev/rtmotor_raw_l0","r") as f:
-            data = f.readline()
-            self.assertEqual(data,"200\n","wrong left value from cmd_vel")
-        with open("/dev/rtmotor_raw_r0","r") as f:
-            data = f.readline()
-            self.assertEqual(data,"600\n","wrong right value from cmd_vel")
+        file_check("rtmotor_raw_l0",200,"wrong left value from cmd_vel")
+        file_check("rtmotor_raw_r0",600,"wrong right value from cmd_vel")
 
 if __name__ == '__main__':
     time.sleep(3)
