@@ -47,8 +47,8 @@ class MotorTest(unittest.TestCase):
             pub.publish(m)
             time.sleep(0.1)
 
-        file_check("rtmotor_raw_l0",m.left_hz,"wring left value from motor_raw")
-        file_check("rtmotor_raw_r0",m.right_hz,"wring left value from motor_raw")
+        self.file_check("rtmotor_raw_l0",m.left_hz,"wring left value from motor_raw")
+        self.file_check("rtmotor_raw_r0",m.right_hz,"wring left value from motor_raw")
 
     def test_put_cmd_vel(self):
         pub = rospy.Publisher('/cmd_vel', Twist)
@@ -59,8 +59,8 @@ class MotorTest(unittest.TestCase):
             pub.publish(m)
             time.sleep(0.1)
 
-        file_check("rtmotor_raw_l0",200,"wrong left value from cmd_vel")
-        file_check("rtmotor_raw_r0",600,"wrong right value from cmd_vel")
+        self.file_check("rtmotor_raw_l0",200,"wrong left value from cmd_vel")
+        self.file_check("rtmotor_raw_r0",600,"wrong right value from cmd_vel")
 
 if __name__ == '__main__':
     rospy.init_node('travis_test_motors')
