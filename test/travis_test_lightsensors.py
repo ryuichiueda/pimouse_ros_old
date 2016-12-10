@@ -8,23 +8,20 @@ class LightsensorTest(unittest.TestCase):
     def setUp(self):
         self.count = 0
         rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
+        self.values = LightSensorValues()
 
     def callback(self,data):
         self.count += 1
-        self.lf = data.left_forward
-        self.ls = data.left_side
-        self.rs = data.right_side
-        self.rf = data.right_forward
-        self.sa = data.sum_all
-        self.sf = data.sum_forward
+        self.values = data
 
     def check_values(self,lf,ls,rs,rf):
-        self.assertEqual(self.lf,lf,"different value: left_forward")
-        self.assertEqual(self.ls,ls,"different value: left_side")
-        self.assertEqual(self.rs,rs,"different value: right_side")
-        self.assertEqual(self.rf,rf,"different value: right_forward")
-        self.assertEqual(self.sa,lf+ls+rs+rf,"different value: sum_all")
-        self.assertEqual(self.sf,lf+rf,"different value: sum_forward")
+        vs = self.values
+        self.assertEqual(vs.left_forward,lf,"different value: left_forward")
+        self.assertEqual(vs.left_side,ls,"different value: left_side")
+        self.assertEqual(vs.right_side,rs,"different value: right_side")
+        self.assertEqual(vs.right_forward,rf,"different value: right_forward")
+        self.assertEqual(vs.sum_all,lf+ls+rs+rf,"different value: sum_all")
+        self.assertEqual(vs.sum_forward,lf+rf,"different value: sum_forward")
 
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
