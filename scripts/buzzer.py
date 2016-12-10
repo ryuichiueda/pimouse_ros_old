@@ -8,7 +8,7 @@ def recv_buzzer(data):
     try:
         with open(bfile,"w") as f:
             f.write(str(data.data) + "\n")                
-    except:
+    except IOError:
         rospy.logerr("can't write to " + bfile)
 
 if __name__ == '__main__':
