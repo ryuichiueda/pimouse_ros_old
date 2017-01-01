@@ -18,8 +18,6 @@ def exec_music(goal):
     r = MusicResult()
     fb = MusicFeedback()
 
-    r.finished = True
-
     for i, f in enumerate(goal.freqs):
         fb.remaining_steps = len(goal.freqs) - i
         music.publish_feedback(fb)
@@ -35,6 +33,7 @@ def exec_music(goal):
 
     fb.remaining_steps = 0
     music.publish_feedback(fb)
+    r.finished = True
     music.set_succeeded(r)
 
 if __name__ == '__main__':
