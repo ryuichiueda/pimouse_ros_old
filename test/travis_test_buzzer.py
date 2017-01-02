@@ -51,7 +51,6 @@ class BuzzerTest(unittest.TestCase):
 
     def feedback_cb(self,feedback):
         time.sleep(1)
-        hz = feedback.remaining_steps * 100
         with open("/dev/rtbuzzer0","r") as f:
             data = f.readline()
             self.device_values.append(int(data.rstrip()))
