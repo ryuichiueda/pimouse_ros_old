@@ -15,7 +15,7 @@ class BuzzerTest(unittest.TestCase):
         self.assertIn('/buzzer',nodes, "node does not exist")
 
     def test_put_value(self):
-        time.sleep(3)
+        #time.sleep(3)
         pub = rospy.Publisher('/buzzer', UInt16)
         for i in range(10):
             pub.publish(1234)
@@ -26,7 +26,7 @@ class BuzzerTest(unittest.TestCase):
             self.assertEqual(data,"1234\n","value does not written to rtbuzzer0")
 
     def test_music(self):
-        time.sleep(3)
+        #time.sleep(3)
         goal = MusicGoal()
         goal.freqs = [100, 200, 300, 0]
         goal.durations = [2,2,2,2]
@@ -35,7 +35,7 @@ class BuzzerTest(unittest.TestCase):
         self.client.send_goal(goal,feedback_cb=self.feedback_cb)
         self.client.wait_for_result()
 
-        time.sleep(3)
+        #time.sleep(3)
         self.assertTrue(self.client.get_result(),"invalid result")
         self.assertEqual(goal.freqs,self.device_values,"invalid feedback:" 
                 + ",".join([str(e) for e in self.device_values]))
@@ -45,12 +45,12 @@ class BuzzerTest(unittest.TestCase):
         self.client.send_goal(goal,feedback_cb=self.feedback_cb)
         self.client.wait_for_result(rospy.Duration.from_sec(0.5))
 
-        time.sleep(3)
+        #time.sleep(3)
         self.assertFalse(self.client.get_result(),"stop is requested but return true")
         self.assertFalse(goal.freqs == self.device_values,"not stopped")
 
     def feedback_cb(self,feedback):
-        time.sleep(1)
+        #time.sleep(1)
         with open("/dev/rtbuzzer0","r") as f:
             data = f.readline()
             self.device_values.append(int(data.rstrip()))
