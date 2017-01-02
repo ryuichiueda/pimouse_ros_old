@@ -31,8 +31,6 @@ def exec_music(goal):
         write_freq(f)
         rospy.sleep(1.0 if i >= len(goal.durations) else goal.durations[i])
 
-    fb.remaining_steps = 0
-    music.publish_feedback(fb)
     r.finished = True
     music.set_succeeded(r)
 

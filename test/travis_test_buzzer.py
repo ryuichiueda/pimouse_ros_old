@@ -37,7 +37,7 @@ class BuzzerTest(unittest.TestCase):
         self.assertTrue(self.client.get_result(),"invalid result")
 
         time.sleep(3)
-        self.assertEqual(goal.freqs,self.feedback_value[0:4],"invalid feedback:" 
+        self.assertEqual(goal.freqs,self.feedback_value,"invalid feedback:" 
                 + ",".join([str(e) for e in self.feedback_value]))
 
         ###preemption###
@@ -45,8 +45,8 @@ class BuzzerTest(unittest.TestCase):
         self.client.send_goal(goal,feedback_cb=self.feedback_cb)
         self.client.wait_for_result(rospy.Duration.from_sec(0.5))
 
-        self.assertFalse(self.client.get_result(),"stopped but return true")
-        self.assertFalse(goal.freqs == self.feedback_value[0:4],"not stopped")
+        self.assertFalse(self.client.get_result(),"stop is requested but return true")
+        self.assertFalse(goal.freqs == self.feedback_value,"not stopped")
 
     def check_sequence(self):
         with open("/dev/rtbuzzer0","r") as f:
