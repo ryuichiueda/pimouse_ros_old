@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+#Copyright (c) 2016 Ryuichi Ueda <ryuichiueda@gmail.com>
+#This software is released under the BSD License.
+
 import rospy
 from std_msgs.msg import UInt16
 

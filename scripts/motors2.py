@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#Copyright (c) 2016 Ryuichi Ueda <ryuichiueda@gmail.com>
+#This software is released under the BSD License.
 import sys, rospy, math
 from pimouse_ros.msg import MotorFreqs
 from geometry_msgs.msg import Twist
